@@ -1,0 +1,51 @@
+# Learn more about configuring your Shopify app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "TrustLoop"
+client_id = "your-client-id"
+application_url = "https://trustloop-shopify-review-app-84pkc7kw.sites.blink.new"
+embedded = true
+
+[access_scopes]
+# Shopify access scopes
+scopes = "read_products,write_products,read_orders,write_orders,read_customers,write_customers,read_content,write_content,read_themes,write_themes,read_script_tags,write_script_tags,read_webhooks,write_webhooks"
+
+[auth]
+redirect_urls = [
+  "https://trustloop-shopify-review-app-84pkc7kw.sites.blink.new/auth/callback",
+  "https://trustloop-shopify-review-app-84pkc7kw.sites.blink.new/auth/shopify/callback",
+  "https://trustloop-shopify-review-app-84pkc7kw.sites.blink.new/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-04"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/api/webhooks/app/uninstalled"
+
+  [[webhooks.subscriptions]]
+  topics = [ "orders/create" ]
+  uri = "/api/webhooks/orders/create"
+
+  [[webhooks.subscriptions]]
+  topics = [ "orders/updated" ]
+  uri = "/api/webhooks/orders/updated"
+
+  [[webhooks.subscriptions]]
+  topics = [ "orders/paid" ]
+  uri = "/api/webhooks/orders/paid"
+
+  [[webhooks.subscriptions]]
+  topics = [ "products/create" ]
+  uri = "/api/webhooks/products/create"
+
+  [[webhooks.subscriptions]]
+  topics = [ "products/update" ]
+  uri = "/api/webhooks/products/update"
+
+  [[webhooks.subscriptions]]
+  topics = [ "customers/create" ]
+  uri = "/api/webhooks/customers/create"
+
+[pos]
+embedded = false
