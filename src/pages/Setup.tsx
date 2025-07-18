@@ -18,6 +18,8 @@ import {
 import { blink } from '../blink/client'
 import { toast } from '@/hooks/use-toast'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { WebhookManager } from '@/utils/webhooks'
+import { ShopifyAPI } from '@/utils/shopify'
 
 interface ShopifyStore {
   id: string
@@ -212,6 +214,23 @@ export function Setup() {
       }
       
       await blink.db.setup.create(setupRecord)
+      
+      // Setup webhooks automatically
+      try {
+        const shopifyAPI = new ShopifyAPI(setupData.shopify_store_url, setupData.shopify_access_token)
+        const webhookManager = new WebhookManager(shopifyAPI)
+        
+        const webhookResults = await webhookManager.setupAllWebhooks(user.id)
+        
+        if (webhookResults.success) {
+          console.log('Webhooks configured successfully:', webhookResults.results)
+        } else {
+          console.warn('Some webhooks failed to configure:', webhookResults.results)
+        }
+      } catch (webhookError) {
+        console.error('Error setting up webhooks:', webhookError)
+        // Don't fail the setup if webhooks fail
+      }
       
       toast({
         title: "Setup Complete!",
